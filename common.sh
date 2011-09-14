@@ -1,4 +1,7 @@
+#!/bin/bash
+
 function relpath(){    
+
     if [[ "$1" == "$2" ]]
     then
 	echo "."
@@ -13,8 +16,9 @@ function relpath(){
     abssize=${#absolute[@]}
     cursize=${#current[@]}
 
+
     while [[ ${absolute[level]} == ${current[level]} ]];
-    do
+    do       
 	(( level++ ))
 	if (( level > abssize || level > cursize ))
 	then

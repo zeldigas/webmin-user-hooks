@@ -7,13 +7,15 @@
 #
 #
 
+##### start of tunable parameters
+
 GROUP_PATTERN="^class[1-9]+[:alpa:]*"
-GROUP_PATTERN=pavlov
 
 CLASS_GROUPS_DIR=/srv/user_dirs/groups_dir
 USERS_DIR=/srv/user_dirs/user_homes
 
-RELATIVE_PATH_TO_USER_CLASSES_DIR=pavlov/stud_groups
+#####   End of tunable parameters
+
 
 user_uid=${USERADMIN_UID}
 secondary_groups=${USERADMIN_SECONDARY}
@@ -55,18 +57,17 @@ function create_user_home_link() {
     user_name=`get_user_name $uid`
     user_gecos=`get_user_gecos $uid`
 
-    link_name=`make_link_name $user_name $user_gecos`
-
     cd "$CLASS_GROUPS_DIR/$class_group/"
 
-    relative_users_home=`relpath $(pwd) $USERS_DIR`
+    relative_users_homes=`relpath "$(pwd)" "$USERS_DIR"`
+    relative_home_path=$relative_users_homes/`basename $home`
+    
+    link_name=`make_link_name "$user_name" "$user_gecos"`
 
-    ln -s "$relative_users_home/`basename $home`" "$link_name"
+    ln -s "$relative_home_path" "$link_name"
 }
 
-#for found_value in `get_class_group $secondary_groups`;
-#do
-#    create_user_home_link $user_uid $user_home `get_group_name $found_value`
-#done
-
-relpath /home /usr/bin
+for found_value in `get_class_group $secondary_groups`;
+do
+    create_user_home_link "$user_uid" "$user_home" "`get_group_name $found_value`"
+done
