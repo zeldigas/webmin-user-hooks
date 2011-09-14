@@ -1,11 +1,26 @@
 #!/bin/bash
 
-# insert documetation here
-# with description of script parameters
-# and passed values
+# This is a post hook script for webmin user addition procedure
+# The purpose of it --- to build a structure of user home dirs according to group
+# to which user belongs.
+# Script tunable parameters a situated in the begining of the script (just after
+# this documentation notes). The scritp assumes that you want to make a relative 
+# link from subfolder of CLASS_GROUPS_DIR to a USERS_DIR
 #
+# CLASS_GROUPS_DIR is a directory which contains directory groups.
+# USERS_DIR is a dir where user home folders situated.
 #
+# Usecase assumption 1.
+# a. You mount users dir to USERS_DIR and place CLASS_GROUPS_DIR in parent folder of USERS_DIR
+# b. Share over NFS parent of USER_DIR.
 #
+# Usecase assumption 2.
+# a. You USERS_DIR is a link to user homes folder (not necessary, but handy for use on server side)
+# b. CLASS_GROUPS_DIR in the sampe parent folder again and is real folder
+# c. NFS export USERS_DIR and CLASS_GRUPS_DIR
+# d. On target pc, you mount this dirs on the same level (in the same dir) with names equal to $USERS_DIR and $CLASS_GROUPS_DIR
+#
+# in both this cases because of the relative link, you can access from groups dirs to user homes transparently
 
 ##### start of tunable parameters
 
