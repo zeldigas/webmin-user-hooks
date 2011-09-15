@@ -25,16 +25,11 @@
 ##### start of tunable parameters
 
 GROUP_PATTERN="^class[1-9]+[:alpa:]*"
-
+GROUP_PATTERN=pavlov
 CLASS_GROUPS_DIR=/srv/user_dirs/groups_dir
 USERS_DIR=/srv/user_dirs/user_homes
 
 #####   End of tunable parameters
-
-
-user_uid=${USERADMIN_UID}
-secondary_groups=${USERADMIN_SECONDARY}
-user_home=${USERADMIN_HOME}
 
 source common.sh
 
@@ -82,7 +77,30 @@ function create_user_home_link() {
     ln -s "$relative_home_path" "$link_name"
 }
 
-for found_value in `get_class_group $secondary_groups`;
-do
-    create_user_home_link "$user_uid" "$user_home" "`get_group_name $found_value`"
-done
+user_uid=${USERADMIN_UID}
+secondary_groups=${USERADMIN_SECONDARY}
+user_home=${USERADMIN_HOME}
+
+
+function create_links_for_user(){
+    for found_value in `get_class_group $secondary_groups`;
+    do
+	create_user_home_link "$user_uid" "$user_home" "`get_group_name $found_value`"
+    done
+}
+
+function remove_links_for_user(){
+    for found_value in `get_class_group $secondary_groups`;
+    do
+	group_name=`get_group_name $found_value`
+	rm "$CLASS_GROUPS_DIR/$group_name/$(basename $user_home)"
+    done
+}
+
+if [[ "$USERADMIN_ACTION" == "CREATE_USER" ]];
+then
+    create_links_for_user
+elif [[ "$USERADMIN_ACTION" == "DELETE_USER" ]];
+then
+    remove_links_for_user;
+fi
