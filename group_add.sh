@@ -16,12 +16,13 @@ function create_group_dir(){
 
 function remove_group_dir(){
     rm -f "$CLASS_GROUPS_DIR/$group_name/"*
-    rmdir $CLASS_GROUPS_DIR/$group_name"
+    rmdir "$CLASS_GROUPS_DIR/$group_name"
 }
 
 if [[ "$USERADMIN_ACTION" == "CREATE_GROUP" ]];
 then
     create_group_dir
 elif [[ "$USERADMIN_ACTION" == "DELETE_GROUP" ]]
+then
     remove_group_dir
 fi
