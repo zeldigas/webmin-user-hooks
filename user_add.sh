@@ -25,20 +25,20 @@
 ##### start of tunable parameters
 
 GROUP_PATTERN="^class[1-9]+[:alpa:]*"
-GROUP_PATTERN=pavlov
 CLASS_GROUPS_DIR=/srv/user_dirs/groups_dir
 USERS_DIR=/srv/user_dirs/user_homes
 
 #####   End of tunable parameters
-
-source common.sh
+SCRIPT_DIR="$( cd "$( dirname  "$0" )" && pwd )"
+source ${SCRIPT_DIR}/common.sh
 
 function get_class_group(){
   for group_id in `echo $1 | tr "," "\n"`;
   do
-      if echo `get_group_name $group_id` | grep -qE ${GROUP_PATTERN} - ;
+      group_name=`get_group_name $group_id`
+      if echo $group_name | grep -qE ${GROUP_PATTERN} - ;
       then
-	  echo $group_id;
+	  echo $group_name;
       fi
   done
 }
@@ -85,15 +85,14 @@ user_home=${USERADMIN_HOME}
 function create_links_for_user(){
     for found_value in `get_class_group $secondary_groups`;
     do
-	create_user_home_link "$user_uid" "$user_home" "`get_group_name $found_value`"
+	create_user_home_link "$user_uid" "$user_home" "$found_value"
     done
 }
 
 function remove_links_for_user(){
     for found_value in `get_class_group $secondary_groups`;
     do
-	group_name=`get_group_name $found_value`
-	rm "$CLASS_GROUPS_DIR/$group_name/$(basename $user_home)"
+	rm "$CLASS_GROUPS_DIR/$found_value/$(basename $user_home)"
     done
 }
 
