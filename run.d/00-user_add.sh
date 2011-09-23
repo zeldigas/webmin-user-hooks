@@ -24,7 +24,7 @@
 
 ##### start of tunable parameters
 
-GROUP_PATTERN="^class[1-9]+[:alpa:]*"
+GROUP_PATTERN="^class[0-9]+[:alpa:]*"
 CLASS_GROUPS_DIR=/srv/user_dirs/groups_dir
 USERS_DIR=/srv/user_dirs/user_homes
 
