@@ -9,6 +9,6 @@ then
 	cd $SH_DIR
 	for shell_file in $SH_DIR/[0-9]*.sh ;
 	do
-		. $shell_file
+		$( $shell_file )
 	done
 fi
