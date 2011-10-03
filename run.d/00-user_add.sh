@@ -47,37 +47,31 @@ function get_group_name() {
     echo `getent group | grep :$1: | head -n 1 | cut -f 1 -d ":"`
 }
 
-function get_user_name() {
-    echo `getent passwd | grep :$1: | head -n 1 | cut -f 1 -d ":"`
-}
-
-function get_user_gecos(){
-    echo "";
-}
-
 function make_link_name(){
-    echo $1
+    echo "$2 ($1)"
 }
 
 function create_user_home_link() {
-    uid=$1;
-    home=$2;
-    class_group=$3
-
-    user_name=`get_user_name $uid`
-    user_gecos=`get_user_gecos $uid`
+    class_group=$1
 
     cd "$CLASS_GROUPS_DIR/$class_group/"
+
+    if [[ $? != 0 ]];
+    then
+	echo "failed to create link in a directory $CLASS_GROUPS_DIR/$class_group"
+	return;
+    fi
 
     relative_users_homes=`relpath "$(pwd)" "$USERS_DIR"`
     relative_home_path=$relative_users_homes/`basename $home`
     
-    link_name=`make_link_name "$user_name" "$user_gecos"`
+    link_name=`make_link_name "$user_name" "$user_real_name"`
 
     ln -s "$relative_home_path" "$link_name"
 }
 
-user_uid=${USERADMIN_UID}
+user_name=${USERADMIN_USER}
+user_real_name=${USERADMIN_REAL}
 secondary_groups=${USERADMIN_SECONDARY}
 user_home=${USERADMIN_HOME}
 
@@ -85,7 +79,7 @@ user_home=${USERADMIN_HOME}
 function create_links_for_user(){
     for found_value in `get_class_group $secondary_groups`;
     do
-	create_user_home_link "$user_uid" "$user_home" "$found_value"
+	create_user_home_link "$found_value"
     done
 }
 
@@ -95,11 +89,19 @@ function remove_links_for_user(){
 	rm "$CLASS_GROUPS_DIR/$found_value/$(basename $user_home)"
     done
 }
-
+function rename_links_for_user(){
+    for found_value in `get class_group $secondary_groups`;
+    do
+#	echo "user in found value"
+    done
+}
 if [[ "$USERADMIN_ACTION" == "CREATE_USER" ]];
 then
     create_links_for_user
 elif [[ "$USERADMIN_ACTION" == "DELETE_USER" ]];
 then
     remove_links_for_user;
+elif [[ "$USERADMIN_ACTION" == "MODIFY_USER" ]];
+then
+    rename_links_for_user;
 fi
