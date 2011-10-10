@@ -63,7 +63,7 @@ function create_user_home_link() {
     fi
 
     relative_users_homes=`relpath "$(pwd)" "$USERS_DIR"`
-    relative_home_path=$relative_users_homes/`basename $home`
+    relative_home_path=$relative_users_homes/`basename $user_home`
     
     link_name=`make_link_name "$user_name" "$user_real_name"`
 
@@ -92,7 +92,7 @@ function remove_links_for_user(){
 function rename_links_for_user(){
     for found_value in `get class_group $secondary_groups`;
     do
-#	echo "user in found value"
+	echo "stub for user modification"
     done
 }
 if [[ "$USERADMIN_ACTION" == "CREATE_USER" ]];
