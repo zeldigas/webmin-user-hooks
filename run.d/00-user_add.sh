@@ -86,7 +86,8 @@ function create_links_for_user(){
 function remove_links_for_user(){
     for found_value in `get_class_group $secondary_groups`;
     do
-	rm "$CLASS_GROUPS_DIR/$found_value/$(basename $user_home)"
+	link_name=`make_link_name "$user_name" "$user_real_name"`
+	rm "$CLASS_GROUPS_DIR/$found_value/$link_name"
     done
 }
 function rename_links_for_user(){
