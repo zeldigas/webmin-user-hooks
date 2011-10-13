@@ -96,13 +96,17 @@ function rename_links_for_user(){
 	echo "stub for user modification"
     done
 }
-if [[ "$USERADMIN_ACTION" == "CREATE_USER" ]];
-then
-    create_links_for_user
-elif [[ "$USERADMIN_ACTION" == "DELETE_USER" ]];
-then
-    remove_links_for_user;
-elif [[ "$USERADMIN_ACTION" == "MODIFY_USER" ]];
-then
-    rename_links_for_user;
-fi
+
+case "$USERADMIN_ACTION" in
+    "CREATE_USER")
+	create_links_for_user
+	;;
+    "DELETE_USER")
+	remove_links_for_user
+	;;
+    "MODIFY_USER")
+	rename_links_for_user
+	;;
+    *)
+	
+esac
